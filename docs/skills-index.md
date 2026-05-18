@@ -38,7 +38,7 @@ See [Secure development skills](secure-development-skills.md) for the full index
 | `spiffe-spire/` | 1 | SPIFFE/SPIRE + mTLS for service-to-service auth |
 | `supply-chain/` | 5 | Dependency risk auditing, SBOM/provenance, secure pipelines, software signing |
 | `cloud-infrastructure/` | 2 | AWS security baselines (IAM, VPC, CloudTrail, RDS, KMS), general database security |
-| `kubernetes/` | 11 | Operator RBAC, OpenShift SCCs, Helm chart security, container hardening, health probes, workload resilience, pod access control, linux capabilities, network security, observability, cpu performance |
+| `kubernetes/` | 13 | Operator RBAC, OpenShift SCCs, Helm chart security, container hardening, health probes, workload resilience, pod access control, linux capabilities, network security, observability, cpu performance, operator security ext, platform integrity |
 | `languages/` | 3 | Go secure coding, compiler hardening (flags, sanitizers), C/C++ memory and string safety |
 | `messaging/` | 2 | Kafka/AMQ Streams (TLS, SASL, ACLs), MQTT (auth, topic ACLs, payload encryption) |
 | `web-security/` | 9 | Web application security, HTTP security headers, React XSS prevention, GraphQL hardening, client-side security, input validation and injection, session management, file uploads, XML and serialization |
