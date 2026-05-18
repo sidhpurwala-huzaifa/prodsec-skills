@@ -6,7 +6,7 @@
 
 | Category | Skills | Purpose |
 |----------|--------|---------|
-| [`secure_development/`](#secure_development) | 110 | Building secure software — AI/agentic infrastructure, cryptography, supply chain, security principles, technology-specific hardening |
+| [`secure_development/`](#secure_development) | 111 | Building secure software — AI/agentic infrastructure, cryptography, supply chain, security principles, technology-specific hardening |
 | [`security_testing/`](#security_testing) | 17 | Finding vulnerabilities — fuzzing and static analysis |
 | [`security_auditing/`](#security_auditing) | 4 | Security review workflows |
 | [`developer_tooling/`](#developer_tooling) | 4 | General-purpose development tooling |
@@ -38,7 +38,7 @@ See [Secure development skills](secure-development-skills.md) for the full index
 | `spiffe-spire/` | 1 | SPIFFE/SPIRE + mTLS for service-to-service auth |
 | `supply-chain/` | 5 | Dependency risk auditing, SBOM/provenance, secure pipelines, software signing |
 | `cloud-infrastructure/` | 2 | AWS security baselines (IAM, VPC, CloudTrail, RDS, KMS), general database security |
-| `kubernetes/` | 13 | Operator RBAC, OpenShift SCCs, Helm chart security, container hardening, health probes, workload resilience, pod access control, linux capabilities, network security, observability, cpu performance, operator security ext, platform integrity |
+| `kubernetes/` | 13 | Container hardening, health probes, Helm chart security, linux capabilities, network security, observability, operator security, platform integrity, pod access control, SCC security, TLS compliance, workload resilience, cpu performance |
 | `languages/` | 3 | Go secure coding, compiler hardening (flags, sanitizers), C/C++ memory and string safety |
 | `messaging/` | 2 | Kafka/AMQ Streams (TLS, SASL, ACLs), MQTT (auth, topic ACLs, payload encryption) |
 | `web-security/` | 9 | Web application security, HTTP security headers, React XSS prevention, GraphQL hardening, client-side security, input validation and injection, session management, file uploads, XML and serialization |

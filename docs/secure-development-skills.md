@@ -1,6 +1,6 @@
 # Secure Development skills
 
-110 tool-agnostic secure development skills organized by category, covering **AI/agentic infrastructure security**, **code-level secure configuration**, **security design principles**, and **technology-specific hardening**.
+111 tool-agnostic secure development skills organized by category, covering **AI/agentic infrastructure security**, **code-level secure configuration**, **security design principles**, and **technology-specific hardening**.
 
 ## Usage
 
@@ -54,7 +54,7 @@ Teams copying subsets into another repo can omit skill directories they do not n
 | Subcategory | Skills | Focus |
 |-------------|--------|-------|
 | [`cloud-infrastructure`](#cloud-infrastructure) | 2 | AWS security baselines (IAM, VPC, CloudTrail, RDS, KMS), general database security |
-| [`kubernetes`](#kubernetes) | 13 | Operator RBAC, OpenShift SCCs, Helm chart security, container hardening, health probes, workload resilience, pod access control, linux capabilities, network security, observability, cpu performance, operator security ext, platform integrity |
+| [`kubernetes`](#kubernetes) | 13 | Container hardening, health probes, Helm chart security, linux capabilities, network security, observability, operator security, platform integrity, pod access control, SCC security, TLS compliance, workload resilience, cpu performance |
 | [`languages`](#languages) | 3 | Go secure coding, compiler hardening (flags, sanitizers), C/C++ memory and string safety |
 | [`messaging`](#messaging) | 2 | Kafka/AMQ Streams (TLS, SASL, ACLs), MQTT (auth, topic ACLs, payload encryption) |
 | [`web-security`](#web-security) | 9 | Web application security, HTTP security headers, React XSS prevention, GraphQL hardening, client-side security (XSS/CSRF/CSP), input validation and injection, session management, file upload security, XML and serialization hardening |
@@ -253,10 +253,14 @@ Teams copying subsets into another repo can omit skill directories they do not n
 | [`cpu-performance`](../module/skills/cpu-performance/SKILL.md) | Configure CPU isolation, scheduling policies, and storage management for latency-sensitive Kubernetes workloads |
 | [`health-probes`](../module/skills/health-probes/SKILL.md) | Configure Kubernetes health probes, lifecycle hooks, and termination policies |
 | [`helm-chart-security`](../module/skills/helm-chart-security/SKILL.md) | Audit and harden Helm chart security configurations |
-| [`kubernetes`](#kubernetes) | 10 | Operator RBAC, OpenShift SCCs, Helm chart security, container hardening, health probes, workload resilience, pod access control, linux capabilities, network security, observability |
+| [`linux-capabilities`](../module/skills/linux-capabilities/SKILL.md) | Review and restrict Linux capabilities in Kubernetes containers |
+| [`network-security`](../module/skills/network-security/SKILL.md) | Configure Kubernetes network security including host access restrictions, network policies, and port management |
+| [`observability`](../module/skills/observability/SKILL.md) | Configure Kubernetes workload observability including logging, CRD status, port naming, and API compatibility |
 | [`operator-security`](../module/skills/operator-security/SKILL.md) | Enforce least-privilege RBAC and secure runtime configuration for Kubernetes Operators |
-| [`kubernetes`](#kubernetes) | 8 | Operator RBAC, OpenShift SCCs, Helm chart security, container hardening, health probes, workload resilience, pod access control, platform integrity |
+| [`platform-integrity`](../module/skills/platform-integrity/SKILL.md) | Validate Kubernetes platform configuration including boot parameters, hugepages, kernel state, and OpenShift lifecycle |
+| [`pod-access-control`](../module/skills/pod-access-control/SKILL.md) | Configure Kubernetes RBAC bindings, service accounts, namespaces, resource quotas, and service types for least-privilege access control |
 | [`scc-security`](../module/skills/scc-security/SKILL.md) | Review OpenShift Security Context Constraints for correct privilege levels |
+| [`tls-compliance`](../module/skills/tls-compliance/SKILL.md) | Enforce TLS compliance for Kubernetes and OpenShift workloads including version enforcement, cipher suites, and certificate management |
 | [`workload-resilience`](../module/skills/workload-resilience/SKILL.md) | Configure Kubernetes workload resilience including pod scheduling, scaling, high availability, and disruption budgets |
 
 ### languages

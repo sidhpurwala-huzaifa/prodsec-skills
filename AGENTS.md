@@ -22,7 +22,7 @@ If you are consuming skills as an **installable module** (for example via Lola),
 | `docs/` | Design notes, skill indexes, ADRs |
 | `scripts/` | Validation and utilities (outside the module boundary) |
 
-Skills are grouped logically by `category` and `subcategory` fields in each `SKILL.md`. Counts by category: **110** secure development, **17** security testing, **4** security auditing, **4** developer tooling — see [`docs/skills-index.md`](docs/skills-index.md).
+Skills are grouped logically by `category` and `subcategory` fields in each `SKILL.md`. Counts by category: **111** secure development, **17** security testing, **4** security auditing, **4** developer tooling — see [`docs/skills-index.md`](docs/skills-index.md).
 
 ## Skill format
 
