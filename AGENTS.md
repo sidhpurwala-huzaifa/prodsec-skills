@@ -66,7 +66,7 @@ Using `module/skills/input-output-sanitization/SKILL.md`: review this MCP server
 5. Trail of Bits skills are CC BY-SA 4.0 — adapted skills must carry the same license.
 6. Unfinished or unreviewed skills go in `experimental/`, not `module/skills/`.
 7. **Update .coderabbit.yaml** when appropriate.
-8**Update indexes in the same commit** — stale counts cause confusion for both humans and agents:
+8. **Update indexes in the same commit** — stale counts cause confusion for both humans and agents:
 
  | File | What to update |
  |------|----------------|
