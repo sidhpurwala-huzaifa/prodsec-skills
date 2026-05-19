@@ -10,7 +10,7 @@ The goal is to shift security left: apply security guidance during development, 
 make bootstrap
 ```
 
-Installs ruff, ty, pre-commit, and wires up git hooks so linting and ADR validation run automatically before each commit. Requires [`uv`](https://docs.astral.sh/uv/) on your PATH.
+Installs ruff, ty, [skillsaw](https://github.com/stbenjam/skillsaw), pre-commit, and wires up git hooks so linting and ADR validation run automatically before each commit. Requires [`uv`](https://docs.astral.sh/uv/) on your PATH.
 
 ## Using a skill
 
