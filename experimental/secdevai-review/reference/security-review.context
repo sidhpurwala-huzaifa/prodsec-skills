@@ -1,0 +1,272 @@
+# Security Code Review Context
+
+**Purpose**: Security analysis guidelines for AI-powered code review.
+
+**Source**: RedHatProductSecurity/secdevai — `lola-module/skills/secdevai-review/context/security-review.context`
+
+## Core Security Principles
+
+Follow these fundamental security principles when reviewing code:
+
+1. **Complete Mediation**: Every access request must be validated and authorized
+2. **Defense in Depth**: Use multiple, layered security controls
+3. **Least Privilege**: Grant only minimum permissions necessary
+4. **Secure by Design, Default, Deployment**: Ship with secure defaults; deny by
+   default; no hardcoded secrets
+5. **Secure data in transit and at rest**: Encrypt all external communication;
+   store sensitive data with strong encryption
+6. **Least Common Mechanism**: Isolate components; avoid single points of failure
+7. **Monitoring**: Log all sensitive admin actions; maintain upgrade paths
+
+---
+
+## OWASP Top 10 (2021) — Detection Patterns
+
+### A01: Broken Access Control
+
+Patterns to detect:
+- Missing authorization checks before sensitive operations
+- Direct object references without ownership validation (IDOR)
+- Privilege escalation via unchecked role or scope
+
+```python
+# BAD: No access control
+def delete_user(user_id):
+    User.objects.get(id=user_id).delete()
+
+# GOOD: Check permissions
+def delete_user(user_id):
+    if not current_user.is_admin:
+        raise PermissionDenied
+    User.objects.get(id=user_id).delete()
+```
+
+### A02: Cryptographic Failures
+
+Patterns to detect:
+- Weak hashing (MD5, SHA-1) for passwords or integrity
+- `random` instead of `secrets` for security-sensitive values
+- Hardcoded encryption keys, IVs, or passwords
+- TLS verification disabled (`verify=False`, `InsecureSkipVerify`)
+
+```python
+# BAD: Weak random
+import random
+token = random.randint(1, 1000)
+
+# GOOD: Cryptographically secure
+import secrets
+token = secrets.token_urlsafe(32)
+
+# BAD: Weak hash for password
+import hashlib
+h = hashlib.md5(password.encode()).hexdigest()
+
+# GOOD: Strong hash with bcrypt or PBKDF2
+import hashlib, secrets
+salt = secrets.token_bytes(16)
+h = hashlib.pbkdf2_hmac('sha256', password.encode(), salt, 100000)
+```
+
+### A03: Injection
+
+Patterns to detect:
+- SQL built by string concatenation or f-strings with user input
+- `subprocess.call(..., shell=True)` with user-controlled input
+- LDAP injection, template injection, path injection
+
+```python
+# BAD: SQL injection
+query = f"SELECT * FROM users WHERE name = '{user_input}'"
+
+# GOOD: Parameterized query
+cursor.execute("SELECT * FROM users WHERE name = %s", (user_input,))
+
+# BAD: Command injection
+import subprocess
+subprocess.call(f"rm {user_input}", shell=True)
+
+# GOOD: No shell; pass arguments as a list
+subprocess.call(["rm", user_input])  # validate user_input separately
+```
+
+### A04: Insecure Design
+
+Patterns to detect:
+- Missing threat model artifacts for sensitive flows
+- No rate limiting or abuse controls on sensitive endpoints
+- Trust boundaries not enforced in code
+
+### A05: Security Misconfiguration
+
+Patterns to detect:
+- `DEBUG = True` in production
+- Default or hardcoded credentials
+- Exposed `.env`, `.git`, or config files
+- Overly permissive CORS (`Access-Control-Allow-Origin: *` on authenticated APIs)
+
+```python
+# BAD
+DEBUG = True
+SECRET_KEY = "hardcoded-secret"
+
+# GOOD
+import os
+DEBUG = os.getenv("DEBUG", "false").lower() == "true"
+SECRET_KEY = os.environ["SECRET_KEY"]
+```
+
+### A06: Vulnerable and Outdated Components
+
+Patterns to detect:
+- Pinned dependencies with known CVEs
+- Unmaintained or abandoned libraries
+
+Check: `pip-audit`, `safety`, `npm audit`, `govulncheck`, `cargo audit`
+
+### A07: Identification and Authentication Failures
+
+Patterns to detect:
+- Weak password policy (length, complexity)
+- Predictable or non-random session/token identifiers
+- Session fixation vulnerabilities
+
+```python
+# BAD: Weak password check
+if len(password) >= 6:
+    return True
+
+# GOOD: Strong policy
+import re
+if (len(password) >= 12
+        and re.search(r'[A-Z]', password)
+        and re.search(r'[0-9]', password)
+        and re.search(r'[^A-Za-z0-9]', password)):
+    return True
+```
+
+### A08: Software and Data Integrity Failures
+
+Patterns to detect:
+- `pickle.load` or `yaml.load` on untrusted input
+- Missing integrity verification on downloaded artifacts
+- Insecure CI/CD (injectable scripts, unsigned artifacts)
+
+```python
+# BAD: Unsafe deserialization
+import pickle
+data = pickle.load(open('file.pkl', 'rb'))
+
+# GOOD: Use a safe format; validate before deserializing
+import json
+data = json.loads(raw)
+```
+
+### A09: Security Logging and Monitoring Failures
+
+Patterns to detect:
+- No logging of authentication failures or access denials
+- Logging passwords, tokens, or PII in plaintext
+- No alerting on anomalous activity
+
+```python
+# BAD: Log password
+logger.info(f"Login: user={username} password={password}")
+
+# GOOD: Log event only
+logger.info("Login attempt for user=%s", username)
+```
+
+### A10: Server-Side Request Forgery (SSRF)
+
+Patterns to detect:
+- User-controlled URLs passed to HTTP clients without validation
+- Access to internal network or cloud metadata endpoints
+
+```python
+# BAD: SSRF
+url = request.GET.get('url')
+response = requests.get(url)
+
+# GOOD: Validate scheme and host against an allowlist
+from urllib.parse import urlparse
+parsed = urlparse(url)
+if parsed.hostname not in ALLOWED_HOSTS:
+    raise ValueError("Invalid hostname")
+response = requests.get(url, timeout=5)
+```
+
+---
+
+## Common Patterns
+
+### Path Traversal
+
+```python
+# BAD
+path = os.path.join("/data", user_input)
+
+# GOOD
+from pathlib import Path
+base = Path("/data").resolve()
+target = base.joinpath(user_input).resolve()
+if not str(target).startswith(str(base)):
+    raise ValueError("Invalid path")
+```
+
+### Insecure HTTP Requests
+
+```python
+# BAD
+requests.get("https://api.example.com", verify=False)
+
+# GOOD
+requests.get("https://api.example.com", verify=True)
+```
+
+### Hardcoded Secrets
+
+```python
+# BAD
+API_KEY = "sk-1234567890abcdef"
+
+# GOOD
+API_KEY = os.environ["API_KEY"]
+```
+
+---
+
+## Severity Classification
+
+| Severity | Examples |
+|---|---|
+| Critical | RCE, authentication bypass, data breach |
+| High | SQL injection, command injection, sensitive data exposure |
+| Medium | Weak cryptography, missing validation, insecure defaults |
+| Low | Information disclosure, missing logging, code quality |
+| Info | Best practice suggestions |
+
+---
+
+## Output Format
+
+For each finding:
+
+```
+**Severity**: [Critical | High | Medium | Low | Info]
+**Location**: `file.py:42`
+**OWASP Category**: A03: Injection
+**CWE**: CWE-89
+
+**Vulnerable Code**:
+[code snippet]
+
+**Risk**: [Impact explanation]
+
+**Remediation**:
+[fixed code]
+
+**References**:
+- https://owasp.org/www-project-top-ten/
+- https://cwe.mitre.org/data/definitions/89.html
+```

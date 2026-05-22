@@ -1,0 +1,337 @@
+# OWASP Web Security Testing Guide (WSTG v4.2) Context
+
+**Purpose**: Web application security testing patterns for code review.
+
+**Source**: OWASP Web Security Testing Guide v4.2 —
+https://owasp.org/www-project-web-security-testing-guide/
+
+Adapted from RedHatProductSecurity/secdevai —
+`lola-module/skills/secdevai-review/context/wstg-testing.context`
+
+Load this file when reviewing web applications, web services, or APIs.
+
+---
+
+## 4.1 Information Gathering
+
+### WSTG-INFO-01 — Information Leakage in Comments and Debug Endpoints
+
+Patterns to detect:
+- Sensitive information (credentials, internal hosts) in code comments
+- Debug endpoints left reachable in production
+- Verbose error messages revealing stack traces, database queries, or file paths
+
+```python
+# BAD: Sensitive info in comment
+# Database: postgres://admin:password123@db.internal.com/prod
+
+# BAD: Debug endpoint in production
+@app.route('/debug/users')
+def debug_users():
+    return jsonify(User.query.all())
+```
+
+### WSTG-INFO-02 — Server Fingerprinting
+
+Patterns to detect:
+- Verbose `Server` response headers revealing version and OS
+- `X-Powered-By` header disclosing framework version
+
+### WSTG-INFO-05 — Console Logging of Sensitive Data (JavaScript)
+
+```javascript
+// BAD
+console.log('User password:', user.password);
+console.log('API Token:', apiToken);
+
+// GOOD
+console.log('User authenticated:', user.id);
+```
+
+---
+
+## 4.2 Configuration and Deployment Management
+
+### WSTG-CONF-01 — Network Infrastructure Configuration
+
+Patterns to detect:
+- TLS configuration that allows weak cipher suites or protocol versions
+- Missing HSTS headers on HTTPS services
+
+### WSTG-CONF-02 — Application Platform Configuration
+
+Patterns to detect:
+- Default credentials for application servers or admin interfaces
+- Directory listing enabled in web server configuration
+
+### WSTG-CONF-03 — File Extension Handling
+
+Patterns to detect:
+- Upload endpoints that accept executable file extensions
+- Missing content-type validation on uploaded files
+
+### WSTG-CONF-04 — Backup and Unreferenced Files
+
+Patterns to detect:
+- Backup files (`.bak`, `.old`, `.orig`) accessible via HTTP
+- Source maps (`*.js.map`) deployed to production
+
+### WSTG-CONF-07 — HTTP Strict Transport Security
+
+```python
+# BAD: No HSTS
+@app.after_request
+def add_headers(response):
+    return response
+
+# GOOD
+@app.after_request
+def add_headers(response):
+    response.headers['Strict-Transport-Security'] = 'max-age=31536000; includeSubDomains'
+    return response
+```
+
+---
+
+## 4.3 Identity Management
+
+### WSTG-IDNT-01 — Role Definitions
+
+Patterns to detect:
+- User roles not clearly separated in the data model
+- Admin-only operations reachable by regular users
+
+### WSTG-IDNT-04 — Account Enumeration
+
+Patterns to detect:
+- Different response messages for valid vs. invalid usernames on login
+- Timing differences in authentication that reveal account existence
+
+```python
+# BAD: Reveals whether username exists
+if not user:
+    return "Username not found", 401
+if not check_password(user, password):
+    return "Invalid password", 401
+
+# GOOD: Same message for both failure modes
+return "Invalid credentials", 401
+```
+
+---
+
+## 4.4 Authentication
+
+### WSTG-ATHN-01 — Credentials Transported Over an Encrypted Channel
+
+- All login and authentication forms must use HTTPS
+- Credentials must never appear in URL parameters
+
+### WSTG-ATHN-02 — Default Credentials
+
+- No default usernames or passwords in shipped configuration
+- Force credential change on first login for any bootstrapped admin accounts
+
+### WSTG-ATHN-03 — Account Lockout
+
+Patterns to detect:
+- No rate limiting or lockout on login endpoints
+- Unlimited password reset attempts
+
+```python
+# BAD: No rate limiting
+@app.route('/login', methods=['POST'])
+def login():
+    return authenticate(request.form['username'], request.form['password'])
+
+# GOOD: Rate limit and lockout
+from flask_limiter import Limiter
+limiter = Limiter(app, key_func=get_remote_address)
+
+@app.route('/login', methods=['POST'])
+@limiter.limit("5 per minute")
+def login():
+    return authenticate(request.form['username'], request.form['password'])
+```
+
+### WSTG-ATHN-07 — Weak Password Policy
+
+Minimum requirements: 12+ characters, mixed case, digits, and symbols.
+
+---
+
+## 4.5 Authorization
+
+### WSTG-ATHZ-01 — Directory Traversal
+
+```python
+# BAD
+file_path = os.path.join("/data", request.args.get('file'))
+with open(file_path, 'r') as f:
+    return f.read()
+
+# GOOD
+from pathlib import Path
+base = Path("/data").resolve()
+target = base.joinpath(request.args.get('file')).resolve()
+if not str(target).startswith(str(base)):
+    abort(403)
+with open(target, 'r') as f:
+    return f.read()
+```
+
+### WSTG-ATHZ-02 — Bypassing Authorization Schema
+
+Patterns to detect:
+- Horizontal privilege escalation (user A accesses user B's resources via ID
+  manipulation)
+- Missing ownership checks: `GET /api/documents/{id}` without verifying that
+  the requesting user owns the document
+
+---
+
+## 4.6 Session Management
+
+### WSTG-SESS-01 — Session Management Schema
+
+Patterns to detect:
+- Short or predictable session tokens
+- Session IDs in URL parameters
+
+### WSTG-SESS-02 — Cookie Attributes
+
+```python
+# BAD
+response.set_cookie('session', session_id)
+
+# GOOD
+response.set_cookie(
+    'session', session_id,
+    secure=True,
+    httponly=True,
+    samesite='Strict',
+    max_age=3600
+)
+```
+
+### WSTG-SESS-05 — CSRF
+
+```python
+# BAD: No CSRF protection on state-changing endpoints
+@app.route('/transfer', methods=['POST'])
+def transfer():
+    execute_transfer(request.form['amount'])
+
+# GOOD: CSRF token validation
+from flask_wtf.csrf import CSRFProtect
+csrf = CSRFProtect(app)
+
+@app.route('/transfer', methods=['POST'])
+def transfer():
+    execute_transfer(request.form['amount'])  # CSRF token validated by decorator
+```
+
+---
+
+## 4.7 Data Validation
+
+### WSTG-INPV-01 — Reflected Cross-Site Scripting (XSS)
+
+Patterns to detect:
+- User input rendered into HTML without escaping
+
+```python
+# BAD
+return f"<p>Hello {username}</p>"
+
+# GOOD (Flask/Jinja2 auto-escaping)
+from flask import render_template
+return render_template('hello.html', username=username)
+```
+
+### WSTG-INPV-05 — SQL Injection
+
+```python
+# BAD
+query = f"SELECT * FROM users WHERE id = {user_id}"
+
+# GOOD
+cursor.execute("SELECT * FROM users WHERE id = %s", (user_id,))
+```
+
+### WSTG-INPV-06 — LDAP Injection
+
+Patterns to detect: User input embedded in LDAP filter strings without escaping.
+
+### WSTG-INPV-07 — XML Injection
+
+Patterns to detect:
+- XML parsers with external entity processing enabled
+- User input embedded in XML strings
+
+### WSTG-INPV-11 — Code Injection
+
+```python
+# BAD
+eval(user_input)
+exec(user_input)
+
+# GOOD: Never eval user-supplied code
+```
+
+### WSTG-INPV-12 — Command Injection
+
+```python
+# BAD
+os.system(f"ping {host}")
+
+# GOOD
+subprocess.run(["ping", host], timeout=5, check=True)
+```
+
+---
+
+## 4.8 Error Handling
+
+### WSTG-ERRH-01 — Improper Error Handling
+
+Patterns to detect:
+- Stack traces or exception details returned to the client in production
+- Internal file paths or database errors visible in API responses
+
+```python
+# BAD
+@app.errorhandler(Exception)
+def handle_error(e):
+    return str(traceback.format_exc()), 500
+
+# GOOD
+@app.errorhandler(Exception)
+def handle_error(e):
+    logger.error("Unhandled exception", exc_info=e)
+    return {"error": "Internal server error"}, 500
+```
+
+---
+
+## 4.9 Cryptography
+
+### WSTG-CRYP-01 — Weak TLS
+
+- Use TLS 1.2 minimum; prefer TLS 1.3
+- Disable SSLv3, TLSv1.0, TLSv1.1
+- Avoid weak cipher suites (RC4, DES, 3DES, NULL)
+
+### WSTG-CRYP-04 — Weak Encryption
+
+- Do not use ECB mode for block ciphers
+- Use authenticated encryption (AES-GCM) for confidentiality + integrity
+- Never use MD5 or SHA-1 for password hashing
+
+---
+
+## References
+
+- [OWASP WSTG v4.2](https://owasp.org/www-project-web-security-testing-guide/)
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [CWE Top 25](https://cwe.mitre.org/top25/)
