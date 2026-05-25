@@ -1,0 +1,251 @@
+# Golang Application Security Context
+
+**Purpose**: Security analysis guidelines for Go applications — vulnerabilities,
+weaknesses, and secure patterns for code review.
+
+**Scope**: Go (Golang) source code. Use alongside `security-review.context` for
+OWASP framing and `wstg-testing.context` when reviewing web or API services.
+
+**Source**: RedHatProductSecurity/secdevai — `lola-module/skills/secdevai-review/context/golang-security.context`
+
+---
+
+## Core Security Principles (Go-specific application)
+
+1. **Complete Mediation**: Validate and authorize every handler invocation
+2. **Defense in Depth**: Layer validation at handler, service, and data layers
+3. **Least Privilege**: Use the narrowest permission set for each goroutine/service
+4. **Secure by Default**: Deny by default; no hardcoded secrets; `crypto/rand` over
+   `math/rand`
+5. **Secure Data**: TLS in transit; no `InsecureSkipVerify`; zeroize secrets after use
+6. **Isolation**: Avoid shared mutable state across goroutines without synchronization
+
+---
+
+## OWASP Top 10 — Go Patterns
+
+### A01: Broken Access Control
+
+Patterns to detect:
+- Handlers without authorization checks before sensitive operations
+- Direct object references (IDs) used without ownership/role checks
+- Missing access control on API routes or RPC methods
+
+```go
+// BAD: No access control
+func (h *Handler) DeleteUser(c *gin.Context) {
+    id := c.Param("id")
+    h.db.DeleteUser(id)
+}
+
+// GOOD: Check permissions
+func (h *Handler) DeleteUser(c *gin.Context) {
+    if !h.hasRole(c, "admin") {
+        c.AbortWithStatus(http.StatusForbidden)
+        return
+    }
+    id := c.Param("id")
+    if err := h.db.DeleteUser(id); err != nil {
+        c.AbortWithStatus(http.StatusInternalServerError)
+        return
+    }
+}
+```
+
+### A02: Cryptographic Failures
+
+Patterns to detect:
+- `math/rand` for security-sensitive values (tokens, nonces, keys)
+- Weak hashes (MD5, SHA-1) for passwords or integrity
+- `InsecureSkipVerify: true` in TLS config
+
+```go
+// BAD: Weak random
+import "math/rand"
+token := fmt.Sprintf("%d", rand.Int63())
+
+// GOOD: Cryptographically secure random
+import "crypto/rand"
+import "encoding/hex"
+b := make([]byte, 32)
+if _, err := rand.Read(b); err != nil {
+    return "", err
+}
+token := hex.EncodeToString(b)
+
+// BAD: Disable TLS verification
+tlsConfig := &tls.Config{InsecureSkipVerify: true}
+
+// GOOD: Enforce TLS
+tlsConfig := &tls.Config{MinVersion: tls.VersionTLS12}
+```
+
+### A03: Injection
+
+Patterns to detect:
+- SQL built with `fmt.Sprintf`, `+`, or string joins with user input
+- `exec.Command` with shell (`"sh", "-c", userInput`)
+- Path injection in `os.Open`, `os.ReadFile`, or `filepath.Join` with user input
+
+```go
+// BAD: SQL injection
+query := fmt.Sprintf("SELECT * FROM users WHERE id = '%s'", userInput)
+db.Query(query)
+
+// GOOD: Parameterized query
+db.Query("SELECT * FROM users WHERE id = ?", userInput)
+
+// BAD: Command injection
+cmd := exec.Command("sh", "-c", "ls "+userInput)
+
+// GOOD: No shell; pass arguments as slice
+cmd := exec.Command("ls", userInput)  // validate userInput separately
+
+// BAD: Path traversal
+path := filepath.Join("/data", req.URL.Query().Get("file"))
+
+// GOOD: Validate that the resolved path stays within the base directory
+base := filepath.Clean("/data")
+joined := filepath.Clean(filepath.Join(base, req.URL.Query().Get("file")))
+rel, err := filepath.Rel(base, joined)
+if err != nil || strings.HasPrefix(rel, "..") {
+    http.Error(w, "invalid path", http.StatusBadRequest)
+    return
+}
+```
+
+### A05: Security Misconfiguration
+
+```go
+// BAD: Debug in production
+debugMode = true
+
+// BAD: Hardcoded secret
+const apiKey = "sk-1234567890abcdef"
+
+// GOOD: Configuration from environment
+apiKey := os.Getenv("API_KEY")
+if apiKey == "" {
+    log.Fatal("API_KEY required")
+}
+```
+
+### A07: Authentication Failures
+
+```go
+// BAD: Weak password check
+if len(password) >= 6 {
+    return nil
+}
+
+// GOOD: Strong policy and bcrypt
+if len(password) < 12 || !hasUpper(password) || !hasDigit(password) {
+    return errors.New("password does not meet policy")
+}
+hash, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+```
+
+### A09: Security Logging
+
+```go
+// BAD: Logging credentials
+slog.Info("login", "user", username, "password", password)
+
+// GOOD: Log event only
+slog.Info("login attempt", "user", username)
+```
+
+### A10: SSRF
+
+```go
+// BAD: SSRF
+url := r.URL.Query().Get("url")
+resp, err := http.Get(url)
+
+// GOOD: Validate URL against allowlist with timeout
+urlStr := r.URL.Query().Get("url")
+u, err := url.Parse(urlStr)
+if err != nil || u.Scheme != "https" || !isAllowedHost(u.Host) {
+    http.Error(w, "invalid url", http.StatusBadRequest)
+    return
+}
+client := &http.Client{Timeout: 10 * time.Second}
+resp, err := client.Get(urlStr)
+```
+
+---
+
+## Common Go Patterns
+
+### Cryptographically Secure Randomness
+
+```go
+// BAD
+import "math/rand"
+id := rand.Intn(1000000)
+
+// GOOD
+import "crypto/rand"
+import "encoding/binary"
+var id uint32
+binary.Read(rand.Reader, binary.BigEndian, &id)
+```
+
+### HTTP Client Timeouts
+
+```go
+// BAD: No timeout — vulnerable to resource exhaustion
+http.Get(url)
+
+// GOOD
+client := &http.Client{Timeout: 10 * time.Second}
+client.Get(url)
+```
+
+### Concurrency — Shared State
+
+```go
+// BAD: Race condition on shared map
+var cache = make(map[string]int)
+func Increment(key string) {
+    cache[key]++  // data race
+}
+
+// GOOD: Protect with mutex
+var (
+    cache = make(map[string]int)
+    mu    sync.Mutex
+)
+func Increment(key string) {
+    mu.Lock()
+    defer mu.Unlock()
+    cache[key]++
+}
+```
+
+### Dependency Hygiene
+
+Run `govulncheck ./...` and keep `go.mod` current. Use `go mod tidy` to remove
+unused dependencies.
+
+---
+
+## Severity Classification (Go context)
+
+| Severity | Examples |
+|---|---|
+| Critical | RCE via command injection or SQL injection, auth bypass |
+| High | Sensitive data exposure, weak crypto, missing authz |
+| Medium | Weak validation, insecure defaults, missing timeouts |
+| Low | Info disclosure, missing logging, dependency warnings |
+| Info | Best practices, hardening suggestions |
+
+---
+
+## References
+
+- [Go Security](https://go.dev/security/)
+- [OWASP Top 10](https://owasp.org/www-project-top-ten/)
+- [CWE Top 25](https://cwe.mitre.org/top25/)
+- [govulncheck](https://go.dev/blog/vuln)
+- [OWASP Go SCP](https://github.com/OWASP/Go-SCP)
