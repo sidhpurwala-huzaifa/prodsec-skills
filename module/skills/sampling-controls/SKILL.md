@@ -21,7 +21,7 @@ If the MCP server must use sampling (asking the client's LLM to perform a task),
 |---|---|
 | **Use sparingly** | Only use sampling when absolutely necessary; prefer direct computation |
 | **Be predictable** | Sampling requests should be deterministic and expected by the user |
-| **Expect rejection** | Be prepared for the user to reject the sampling request; handle gracefully |
+| **Expect rejection** | Be prepared for the user to reject the sampling request; return a clear error or fall back to a non-sampling code path |
 | **Limit scope** | Keep sampling requests narrow and specific |
 | **No sensitive data** | Never include sensitive data in sampling requests sent to the client's LLM |
 
@@ -39,7 +39,7 @@ If the MCP server must use sampling (asking the client's LLM to perform a task),
 
 - [ ] Avoid using sampling unless absolutely necessary
 - [ ] Document why sampling is needed for each use case
-- [ ] Handle user rejection of sampling requests gracefully
+- [ ] Handle user rejection of sampling requests by returning a clear error or falling back to a non-sampling code path
 - [ ] Keep sampling requests narrow, specific, and predictable
 - [ ] Never include sensitive server-side data in sampling requests
 - [ ] Log all sampling requests and responses for audit

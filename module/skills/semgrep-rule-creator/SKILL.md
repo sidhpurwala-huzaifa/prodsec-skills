@@ -507,7 +507,7 @@ Shows:
 - Why taint didn't propagate (if applicable)
 
 ## Step 5: Iterate Until Tests Pass
-Work on writing Semgrep rule (patterns) iteratively to ensure the Semgrep rule works correctly.
+Work on writing Semgrep rule (patterns) iteratively to ensure the Semgrep rule passes all tests with no missed or incorrect lines.
 
 Each time when you introduce any changes, test Semgrep rule:
 

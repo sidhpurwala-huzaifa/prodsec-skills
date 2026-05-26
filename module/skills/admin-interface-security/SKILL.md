@@ -39,5 +39,5 @@ If the model registry has an administrative interface, only identified, authenti
 - [ ] Enforce MFA for admin accounts
 - [ ] Use short-lived sessions with automatic timeout
 - [ ] Log all administrative actions with the authenticated user's identity
-- [ ] Restrict admin interface to internal networks or VPN where possible
+- [ ] Restrict admin interface to internal networks or VPN unless external access is a documented requirement
 - [ ] Disable default/shared admin accounts

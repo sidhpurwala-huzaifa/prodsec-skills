@@ -41,7 +41,7 @@ Steps:
 2. Filter for HIGH and CRITICAL CVEs. Cross-reference against CISA KEV for any
    active exploitation.
 3. Look beyond top-level packages — check for **embedded or vendored libraries**
-   that scanners may not attribute correctly. See
+   that scanners may not attribute to the correct source package. See
    `./reference/supply-chain-patterns.md` for known high-risk patterns.
 4. For each HIGH/CRITICAL CVE: assess exploitability in the container context
    (network exposure, privilege level, whether the vulnerable code path is reachable).

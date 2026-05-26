@@ -42,7 +42,7 @@ Binding to `0.0.0.0` exposes the MCP server to the local network and potentially
 |---|---|
 | **Containers** | Run in a container (Podman, Docker) to isolate from the host |
 | **chroot** | Use chroot jail to limit filesystem visibility |
-| **Read-only access** | Mount host directories as read-only when possible |
+| **Read-only access** | Mount host directories as read-only unless the server requires write access |
 | **No home directory access** | Do not grant access to the user's entire home directory |
 
 ## Implementation Checklist
@@ -51,6 +51,6 @@ Binding to `0.0.0.0` exposes the MCP server to the local network and potentially
 - [ ] Run as a dedicated low-privilege OS user
 - [ ] Never run as root
 - [ ] Use filesystem isolation (container or chroot)
-- [ ] Mount host directories as read-only where possible
+- [ ] Mount host directories as read-only unless the server requires write access
 - [ ] Limit accessible directories to only what the MCP server needs (respect roots)
 - [ ] Verify no network interfaces other than loopback are exposed

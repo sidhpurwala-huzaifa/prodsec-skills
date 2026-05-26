@@ -61,7 +61,7 @@ User-space sandboxing alone is **insufficient**; prefer OS and process-level iso
 
 ### Dynamic Linking
 
-Dynamic linking relies on well-known search paths and filesystem permissions. The compilation environment may differ from the runtime environment with different (but compatible) library versions. Be aware of:
+Dynamic linking relies on well-known search paths and filesystem permissions. The compilation environment may differ from the runtime environment with different (but compatible) library versions. Review and mitigate:
 
 - Library search path attacks (`LD_LIBRARY_PATH`, `RPATH` manipulation)
 - Symbol interposition risks

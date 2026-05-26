@@ -452,7 +452,7 @@ llvm-cov show ./fuzz_exec -instr-profile=fuzz.profdata -format=html -output-dir 
 - Don't use `-fsanitize=fuzzer` for coverage builds (it conflicts with profile instrumentation)
 - Reuse the same harness function (`LLVMFuzzerTestOneInput`) with a different main function
 - Use the `-ignore-filename-regex` flag to exclude harness code from coverage reports
-- Consider using llvm-cov's `-show-instantiation` flag for template-heavy C++ code
+- Use llvm-cov's `-show-instantiation` flag for template-heavy C++ code
 
 ### AFL++
 

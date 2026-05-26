@@ -360,7 +360,7 @@ Every new test vector MUST be verified against at least two
 independent implementations before being added to the suite:
 
 1. Generate the vector using implementation A
-2. Verify with implementation B (different codebase, ideally different language)
+2. Verify with implementation B (different codebase and different language when available)
 3. If B disagrees, investigate — one implementation has a bug
 
 ### Vector Format

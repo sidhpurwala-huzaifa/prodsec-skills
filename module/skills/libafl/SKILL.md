@@ -372,7 +372,7 @@ The fuzzer emits two main event types:
 | Use `InMemoryOnDiskCorpus` | Persist corpus across restarts |
 | Enable TUI with `-tui=1` | Better visualization of progress |
 | Use specific LLVM version | Avoid compatibility issues |
-| Set `RUSTFLAGS` correctly | Prevent linking errors |
+| Set `RUSTFLAGS` to match your LLVM version | Prevent linking errors |
 
 ### Crash Deduplication
 

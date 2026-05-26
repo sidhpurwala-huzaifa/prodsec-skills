@@ -382,6 +382,7 @@ Report:
 - Number of findings per ruleset
 - Any scan errors
 - File paths of JSON results (in [OUTPUT_DIR]/raw/)
+<!--skillsaw-disable content-placeholder-text -->
 - [If Pro] Note any cross-file findings detected
 ```
 

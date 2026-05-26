@@ -64,7 +64,7 @@ Defines trusted sources for scripts, styles, images, and other resources. The mo
 Content-Security-Policy: default-src 'self'; script-src 'self'; style-src 'self'; img-src 'self' data:; object-src 'none'; frame-ancestors 'none'
 ```
 
-- Start with a restrictive policy and relax only as needed
+- Start with a restrictive policy and relax only when a specific resource or functionality fails due to a blocked source
 - Use `Content-Security-Policy-Report-Only` first to monitor violations without breaking functionality
 - Avoid `unsafe-inline` and `unsafe-eval` for `script-src`; use nonces or hashes instead
 - Set `object-src 'none'` to block plugins (Flash, Java)

@@ -36,7 +36,7 @@ LD_PRELOAD=$(ruby -e 'require "ruzzy"; print Ruzzy::ASAN_PATH') \
     ruby -e 'require "ruzzy"; Ruzzy.dummy'
 ```
 
-This should quickly find a crash demonstrating that Ruzzy is working correctly.
+This should quickly find a crash, demonstrating that Ruzzy is installed and detecting bugs.
 
 ## Installation
 

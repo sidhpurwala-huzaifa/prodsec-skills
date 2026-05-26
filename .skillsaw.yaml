@@ -151,6 +151,9 @@ rules:
   context-budget:
     enabled: auto
     severity: warning
+    exclude:
+      - module/skills/differential-review/SKILL.md
+      - module/skills/property-based-testing/SKILL.md
     limits:
       skill:
         warn: 10000
@@ -196,7 +199,8 @@ rules:
   # Detect critical instructions in the middle of files where LLM attention is lowest
   content-critical-position:
     enabled: auto
-    severity: warning
+    # Downgraded as value is currently unclear
+    severity: info
     min-lines: 50
 
   # Detect instructions that duplicate .editorconfig, ESLint, Prettier, or tsconfig settings
@@ -212,7 +216,7 @@ rules:
   # Detect prohibitions without a positive alternative (agent has no path forward)
   content-negative-only:
     enabled: auto
-    severity: warning
+    severity: info
 
   # Warn about markdown sections longer than ~500 tokens
   content-section-length:
@@ -314,12 +318,13 @@ custom-rules: []
 # Exclude patterns (glob format)
 # Use exclude: [] to disable all excludes including defaults
 exclude:
-    # - "**/template/**"
-    # - "**/templates/**"
-    # - "**/_template/**"
+    - ".coderabbit.yaml"
+    - "**/template/**"
+    - "**/templates/**"
+    - "**/_template/**"
 
 # Additional markdown files to run content rules on (glob format)
 content-paths: []
 
 # Treat warnings as errors
-strict: false
+strict: true

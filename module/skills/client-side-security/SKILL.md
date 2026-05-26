@@ -69,7 +69,7 @@ Content-Security-Policy: script-src 'self' 'nonce-{random}'; object-src 'none'; 
 
 ## Cross-Site Leaks (XS-Leaks) Controls
 
-- Use `SameSite` cookies appropriately; prefer `Strict` for sensitive actions.
+- Set `SameSite=Strict` cookies for sensitive actions and `SameSite=Lax` as the default for all other cookies.
 - Adopt Fetch Metadata protections to block suspicious cross-site requests.
 - Isolate browsing contexts: COOP/COEP and CORP where applicable.
 - Disable caching and add user-unique tokens for sensitive responses to prevent cache probing.
@@ -78,7 +78,7 @@ Content-Security-Policy: script-src 'self' 'nonce-{random}'; object-src 'none'; 
 
 - Minimize and isolate: prefer sandboxed iframes with `sandbox` and postMessage origin checks.
 - Use Subresource Integrity (SRI) for external scripts and monitor for changes.
-- Provide a first-party, sanitized data layer; deny direct DOM access from tags where possible.
+- Provide a first-party, sanitized data layer; deny direct DOM access from tags unless a specific integration requires it.
 - Govern via tag manager controls and vendor contracts; keep libraries updated.
 
 SRI example:

@@ -449,7 +449,7 @@ Weak algorithms, bad parameters, nonce reuse, padding oracle, insufficient rando
 **Verify:**
 
 - Check parameter choices against current standards (NIST, IETF) and known attacks. "AES-128" is fine; "DES" is not.
-- Verify randomness sources. Is the PRNG cryptographically secure? Is it properly seeded?
+- Verify randomness sources. Is the PRNG cryptographically secure? Is it seeded from a cryptographically secure entropy source (e.g., `/dev/urandom`, `CryptGenRandom`)?
 - For nonce reuse: prove the same nonce can actually be used twice in practice, not just theoretically.
 - For timing side channels: is the code actually reachable by an attacker who can measure timing? Network jitter may make remote timing attacks impractical.
 - Compare the implementation against a reference implementation or test vectors from the spec.

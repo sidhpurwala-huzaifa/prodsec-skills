@@ -21,7 +21,7 @@ These apply to all AWS services (e.g., ElastiCache, RDS, MSK).
 
 ### Network Security
 
-- Deploy services in a **VPC** with properly configured security groups and network ACLs
+- Deploy services in a **VPC** with security groups and network ACLs that restrict traffic to only required ports and sources
 - Restrict security group rules to the minimum required ports and source IPs
 - Use private subnets for services that do not need Internet-facing access
 

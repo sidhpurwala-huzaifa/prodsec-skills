@@ -36,7 +36,7 @@ The inference engine loads and executes model code, potentially including third-
 - [ ] Drop all unnecessary Linux capabilities (`--cap-drop=ALL`, add back only what's needed)
 - [ ] Apply a seccomp profile to restrict available syscalls
 - [ ] Run as a non-root user inside the container/VM
-- [ ] Use read-only filesystem where possible; mount model files as read-only
+- [ ] Use a read-only root filesystem; mount model files and any writable directories (e.g., temp, logs) as explicit volume mounts with minimal permissions
 - [ ] Apply network policies to restrict outbound connections
 - [ ] Set resource limits (CPU, memory, GPU) to prevent resource exhaustion
 - [ ] If using SELinux/AppArmor, apply a policy confining the inference process

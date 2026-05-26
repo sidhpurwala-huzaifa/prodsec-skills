@@ -67,7 +67,7 @@ Allows locking memory pages with `mlock()`, `mlockall()`, `shmctl()`, and `mmap(
 
 ## Required Capabilities
 
-Some workloads must add specific capabilities to function correctly.
+Some workloads must add specific capabilities to perform their required operations.
 
 ### SYS_NICE (Real-Time Kernel Nodes)
 

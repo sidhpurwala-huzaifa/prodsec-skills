@@ -15,7 +15,7 @@ A fuzzing harness is the entrypoint function that receives random data from the 
 
 ## Overview
 
-The harness is the bridge between the fuzzer's random byte generation and your application's API. It must parse raw bytes into meaningful inputs, call target functions, and handle edge cases gracefully. The most important part of any fuzzing setup is the harness—if written poorly, critical parts of your application may not be covered.
+The harness is the bridge between the fuzzer's random byte generation and your application's API. It must parse raw bytes into meaningful inputs, call target functions, and return early for invalid or out-of-range inputs without crashing the harness. The most important part of any fuzzing setup is the harness—if written poorly, critical parts of your application may not be covered.
 
 ### Key Concepts
 
@@ -335,7 +335,7 @@ arbitrary = { version = "1", features = ["derive"] }
 
 ### Structure-Aware Fuzzing with Protocol Buffers
 
-For highly structured input formats, consider using Protocol Buffers as an intermediate format with custom mutators:
+For highly structured input formats, use Protocol Buffers as an intermediate format with custom mutators:
 
 ```cpp
 // Define your input format in .proto file
@@ -383,7 +383,7 @@ Follow these rules to ensure effective fuzzing harnesses:
 
 | Rule | Rationale |
 |------|-----------|
-| **Handle all input sizes** | Fuzzer generates empty, tiny, huge inputs—harness must handle gracefully |
+| **Handle all input sizes** | Fuzzer generates empty, tiny, huge inputs—harness must return 0 without crashing for any size |
 | **Never call `exit()`** | Calling `exit()` stops the fuzzer process. Use `abort()` in SUT if needed |
 | **Join all threads** | Each iteration must run to completion before next iteration starts |
 | **Be fast** | Aim for 100s-1000s executions/sec. Avoid logging, high complexity, excess memory |

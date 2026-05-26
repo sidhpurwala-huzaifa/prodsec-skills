@@ -135,7 +135,7 @@ When FIPS mode is active, Go performs integrity self-checks at init, runs known-
 
 ### Historical: CVE-2023-3089
 
-OpenShift 4.10–4.12 Go components were not properly configured to use FIPS-validated crypto modules, defaulting to Go's standard crypto library instead of OpenSSL. Approximately 50% of certificates on affected clusters were produced by non-compliant modules. Remediation required updating to patched releases and rotating certificates (or full reinstall for the most regulated environments). Red Hat has since added build-time enforcement policies that terminate builds using non-compliant crypto.
+OpenShift 4.10–4.12 Go components were not configured to use FIPS-validated crypto modules, defaulting to Go's standard crypto library instead of OpenSSL. Approximately 50% of certificates on affected clusters were produced by non-compliant modules. Remediation required updating to patched releases and rotating certificates (or full reinstall for the most regulated environments). Red Hat has since added build-time enforcement policies that terminate builds using non-compliant crypto.
 
 ## TLS in FIPS Mode
 

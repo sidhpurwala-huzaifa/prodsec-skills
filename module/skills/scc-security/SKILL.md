@@ -47,8 +47,8 @@ SCCs control what actions pods can perform and what host resources they can acce
 - Custom SCCs require particular scrutiny: every relaxation from restricted must have a documented rationale
 - Review that SCCs are bound to the correct ServiceAccounts, not overly broad groups
 - Verify that no workload uses **privileged** SCC unless it is a cluster administration component
-- Check that `runAsNonRoot: true` is set where possible
-- Check that `readOnlyRootFilesystem: true` is set where possible
+- Check that `runAsNonRoot: true` is set unless the container requires root to function
+- Check that `readOnlyRootFilesystem: true` is set unless the container must write to its root filesystem
 
 ## Implementation Checklist
 

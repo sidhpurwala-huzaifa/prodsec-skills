@@ -401,5 +401,5 @@ HEALTHCHECK --interval=30s --timeout=3s \
 - Audit all `.gitlab-ci.yml` and Tekton Task/Pipeline YAML for patterns in the table above.
 - Verify that protected variables are not accessible from unprotected branches.
 - Confirm security scan jobs block merge on failure.
-- Test that pinned images resolve correctly and are from trusted registries.
+- Test that pinned images resolve to the expected digest and are from trusted registries.
 - Review runner/service account RBAC for least privilege.

@@ -1121,7 +1121,7 @@ def normalize(s: str) -> str:
     """
 ```
 
-The docstring says "any unicode" - so null bytes should be valid input. The property is correctly grounded.
+The docstring says "any unicode" - so null bytes should be valid input. The property is grounded: the function accepts any unicode input, so null bytes are valid.
 
 ### 3. Check Strategy Realism
 
@@ -1278,7 +1278,7 @@ def test_format_safe(template):
 **Grounding check**: Does function claim to handle arbitrary strings?
 
 **Classification**:
-- If user-facing, should handle gracefully → Genuine bug
+- If user-facing, should return an error or escape special characters without crashing → Genuine bug
 - If internal API with preconditions → Check preconditions met
 
 ## When NOT to Report

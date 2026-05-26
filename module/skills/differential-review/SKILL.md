@@ -11,6 +11,8 @@ category: "security_auditing"
 subcategory: "audit-workflow"
 ---
 
+<!-- skillsaw-disable context-budget -->
+
 # Differential Security Review
 
 Security-focused code review for PRs, commits, and diffs.

@@ -58,7 +58,7 @@ ResultSet results = pstmt.executeQuery();
 
 - Prefer built-in APIs instead of shelling out (e.g., library calls over `exec`).
 - If unavoidable, use structured execution that separates command and arguments (e.g., ProcessBuilder). Do not invoke shells.
-- Strictly allow-list commands and validate arguments with allow-list regex; exclude metacharacters (`& | ; $ > < \ ! ' " ( )` and whitespace as needed).
+- Strictly allow-list commands and validate arguments with allow-list regex; exclude metacharacters (`& | ; $ > < \ ! ' " ( )` and whitespace when arguments must not contain spaces).
 - Use `--` to delimit arguments where supported to prevent option injection.
 
 Example (Java ProcessBuilder):

@@ -90,7 +90,7 @@ Set-Cookie: id=<opaque>; Secure; HttpOnly; SameSite=Strict; Path=/
 
 - Verify session IDs are regenerated after login and privilege changes.
 - Confirm old session IDs are invalidated after rotation.
-- Test cookie flags are correctly set on all session cookies.
+- Test that `Secure`, `HttpOnly`, and `SameSite` flags are present on all session cookies.
 - Validate idle and absolute timeouts terminate sessions server-side.
 - Probe for session fixation by injecting a known session ID before auth.
 - Test logout fully clears server session and client cookie.

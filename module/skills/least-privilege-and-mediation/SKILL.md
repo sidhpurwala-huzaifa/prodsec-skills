@@ -3,7 +3,7 @@ name: least-privilege-and-mediation
 description: >
   Enforce least privilege and complete mediation in access control design.
   Use when reviewing authorization models, RBAC configurations, API access
-  controls, or evaluating whether every request is properly authorized.
+  controls, or evaluating whether every request is authorized before access is granted.
 category: "secure_development"
 subcategory: "security-principles"
 ---
@@ -44,7 +44,7 @@ This is a pillar of **Zero Trust Architecture**: never assume a request is autho
 - **Access verification:** Validate every access attempt, including internal service-to-service calls
 - **Fine-grained access control:** Define precisely what actions each user or process is authorized to perform
 - **Enhanced accountability:** Comprehensive access logs enable forensic analysis and incident response
-- **Systematic testing:** Maintain an access-control test matrix that maps user roles to resources and validates that controls are correctly enforced
+- **Systematic testing:** Maintain an access-control test matrix that maps user roles to resources and validates that controls deny unauthorized access and permit only authorized access
 
 ### Application
 
