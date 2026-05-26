@@ -253,7 +253,7 @@ pub fn parse_message(data: &[u8]) -> Result<Message, Error> {
 }
 ```
 
-**False positive risk:** MEDIUM - Deserialization must handle malformed data gracefully
+**False positive risk:** MEDIUM - Deserialization must return errors for malformed data instead of crashing
 
 ## Advanced Usage
 
@@ -336,7 +336,7 @@ afl-clang-fast++ -g -fsanitize=address target.cc harness.cc -o fuzzer
 **Integration tips:**
 - Use `afl-clang-fast` or `afl-clang-lto` for automatic macro definition
 - Persistent mode harnesses benefit most from obstacle patching
-- Consider using `AFL_LLVM_LAF_ALL` for additional input-to-state transformations
+- Use `AFL_LLVM_LAF_ALL` for additional input-to-state transformations
 
 ### honggfuzz
 

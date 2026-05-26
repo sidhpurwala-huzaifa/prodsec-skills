@@ -22,7 +22,7 @@ This skill combines three design principles that ensure security is transparent,
 - **No security through obscurity:** Do not rely on attackers not knowing how the system works. Assume the design is known.
 - **Transparency:** Open sharing of source code, development processes, and security mechanisms promotes understanding and enables external review
 - **Scrutiny and engagement:** Broader community review improves quality and catches vulnerabilities that internal teams miss
-- **Comprehensive documentation:** Provide architecture diagrams, component descriptions, interface specifications, and security mechanism documentation. Undocumented systems cannot be properly reviewed.
+- **Comprehensive documentation:** Provide architecture diagrams, component descriptions, interface specifications, and security mechanism documentation. Undocumented systems cannot be reviewed for design flaws or security gaps.
 
 ### Application
 
@@ -32,7 +32,7 @@ This skill combines three design principles that ensure security is transparent,
 
 ## Psychological Acceptability
 
-**Principle:** Security controls should align with user expectations so that users routinely and automatically apply them correctly.
+**Principle:** Security controls should align with user expectations so that users routinely and automatically apply them as intended.
 
 ### Key Aspects
 

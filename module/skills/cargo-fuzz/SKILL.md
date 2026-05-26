@@ -131,7 +131,7 @@ fuzz_target!(|data: &[u8]| {
 |----|-------|
 | Structure code as library crate | Keep everything in main.rs |
 | Use `fuzz_target!` macro | Write custom main function |
-| Handle `Result::Err` gracefully | Panic on expected errors |
+| Handle `Result::Err` by returning early | Panic on expected errors |
 | Keep harness deterministic | Use random number generators |
 
 > **See Also:** For detailed harness writing techniques and structure-aware fuzzing with the

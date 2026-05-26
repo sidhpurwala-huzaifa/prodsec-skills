@@ -42,7 +42,7 @@ Wrong because tool restrictions can still be weaponized. Even restricted tools l
 Wrong because this is the classic env var intermediary miss. Data flows through `env:` blocks to the prompt field with zero visible expressions in the prompt itself. The YAML looks clean but the AI agent still receives attacker-controlled input. This is the most commonly missed vector because reviewers only look for direct expression injection.
 
 **4. "The sandbox prevents any real damage"**
-Wrong because sandbox misconfigurations (`danger-full-access`, `Bash(*)`, `--yolo`) disable protections entirely. Even properly configured sandboxes leak secrets if the AI agent can read environment variables or mounted files. The sandbox boundary is only as strong as its configuration.
+Wrong because sandbox misconfigurations (`danger-full-access`, `Bash(*)`, `--yolo`) disable protections entirely. Even sandboxes with correct configurations leak secrets if the AI agent can read environment variables or mounted files. The sandbox boundary is only as strong as its configuration.
 
 ## Audit Methodology
 
@@ -284,7 +284,7 @@ Each finding includes a numbered data flow trace. Follow these rules:
 
 1. **Start from the attacker-controlled source** -- the GitHub event context where the attacker acts (e.g., "Attacker creates an issue with malicious content in the body"), not a YAML line.
 2. **Show every intermediate hop** -- env blocks, step outputs, runtime fetches, file reads. Include YAML line references where applicable.
-3. **Annotate runtime boundaries** -- when a step occurs at runtime rather than YAML parse time, add a note: "> Note: Step N occurs at runtime -- not visible in static YAML analysis."
+3. **Annotate runtime boundaries** -- when a step occurs at runtime rather than YAML parse time, add an annotation: "> Runtime: Step N occurs at runtime -- not visible in static YAML analysis."
 4. **Name the specific consequence** in the final step (e.g., "Claude executes with tainted prompt -- attacker achieves arbitrary code execution"), not just the YAML element.
 
 For Vectors H and I (configuration findings), replace the data flow section with an impact amplification note explaining what the configuration weakness enables if a co-occurring injection vector is present.
@@ -308,7 +308,7 @@ When no findings are detected, produce a substantive report rather than a bare "
 
 #### 5f. Cross-References
 
-When multiple findings affect the same workflow, briefly note interactions. In particular, when a configuration weakness (Vector H or I) co-occurs with an injection vector (A through G) in the same step, note that the configuration weakness amplifies the injection finding's severity.
+When multiple findings affect the same workflow, briefly note interactions. In particular, when a configuration weakness (Vector H or I) co-occurs with an injection vector (A through G) in the same step, the configuration weakness amplifies the injection finding's severity.
 
 #### 5g. Remote Analysis Output
 
@@ -387,7 +387,7 @@ These `on:` events expose workflows to external attacker-controlled input:
 | `discussion` / `discussion_comment` | Discussion title, body, comment body | External users can create discussions |
 | `workflow_dispatch` | Input values | Triggering user controls all inputs |
 
-Note: `push` events from the default branch and `pull_request` events that do not grant secrets to forks are generally lower risk for prompt injection because the attacker cannot influence the content that reaches the AI agent without already having write access.
+`push` events from the default branch and `pull_request` events that do not grant secrets to forks are generally lower risk for prompt injection because the attacker cannot influence the content that reaches the AI agent without already having write access.
 
 ## Data Flow Model
 

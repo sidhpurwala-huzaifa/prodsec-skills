@@ -454,7 +454,7 @@ This is a critical financial primitive affecting pool solvency, user fund safety
 - block.timestamp <= deadline
 
 *Trust Assumptions:*
-- Pool contract correctly maintains reserves
+- Pool contract maintains reserves in sync with actual token balances
 - ERC20 tokens follow standard behavior (return true on success, revert on failure)
 - No reentrancy from tokenIn/tokenOut during transfers (or handled by nonReentrant modifier)
 
@@ -535,7 +535,7 @@ require(pair != address(0), "Pool does not exist");
 ```
 - **What:** Looks up liquidity pool address for token pair, validates existence
 - **Why here:** Must identify pool before reading reserves or executing transfers
-- **Assumption:** `pairs` mapping is correctly populated during pool creation; no race conditions
+- **Assumption:** `pairs` mapping is populated with valid pool addresses during pool creation; no race conditions
 - **Depends on:** Factory having called createPair(tokenIn, tokenOut) previously
 - **Invariant established:** `pair != 0x0` (valid pool address exists)
 - **Risk:** If pairs mapping is corrupted or pool address is incorrect, funds could be sent to wrong address
@@ -613,7 +613,7 @@ require(amountOut >= minAmountOut, "Slippage exceeded");
 ```
 - **What:** Validates calculated output meets user's minimum acceptable amount
 - **Why here:** After calculation, before any state changes or transfers (fail fast if insufficient)
-- **Assumption:** User calculated minAmountOut correctly based on acceptable slippage tolerance
+- **Assumption:** User calculated minAmountOut from current reserves and their acceptable slippage tolerance
 - **Invariant enforced:** `amountOut >= minAmountOut` (user-defined slippage limit)
 - **First Principles:** User must explicitly consent to price via slippage tolerance; prevents sandwich attacks
 - **5 Whys:**

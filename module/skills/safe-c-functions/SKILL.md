@@ -223,16 +223,16 @@ void func(char *buffer, size_t buffer_size) {
 - [ ] No unsafe memory functions (`memcpy`, `memset`, `memmove`, `memcmp`, `bzero`)
 - [ ] No unsafe string functions (`strcpy`, `strcat`, `strcmp`, `strlen`, `sprintf`, `strstr`, `strtok`)
 - [ ] All memory operations use `*_s()` variants with proper size parameters
-- [ ] Buffer sizes correctly calculated using `sizeof()` or known limits
+- [ ] Buffer sizes calculated using `sizeof()` or known limits
 - [ ] No hardcoded buffer sizes that could change
 
 ### Reviewer Checks
 
 - [ ] All memory operations use safe variants
-- [ ] Destination buffer sizes properly specified
+- [ ] Destination buffer sizes match the allocated size of the destination buffer
 - [ ] All `errno_t` return values handled
 - [ ] `rsize_t dmax` parameters are correct
-- [ ] Strings properly null-terminated
+- [ ] Strings explicitly null-terminated after every write operation
 - [ ] Source string lengths validated before operations
 
 ### Static Analysis Integration

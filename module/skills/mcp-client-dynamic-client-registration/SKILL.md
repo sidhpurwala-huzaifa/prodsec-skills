@@ -43,6 +43,6 @@ Dynamic Client Registration is useful when:
 - [ ] Check authorization server metadata for `registration_endpoint`
 - [ ] Implement RFC 7591 client registration request
 - [ ] Store returned `client_id` and `client_secret` securely
-- [ ] Handle registration errors gracefully
+- [ ] Handle registration errors by logging the failure reason and falling back to manual registration or retrying with corrected parameters
 - [ ] Support re-registration if credentials are lost or expired
 - [ ] Prefer Client ID Metadata Documents when both mechanisms are available

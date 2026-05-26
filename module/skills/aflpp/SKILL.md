@@ -165,7 +165,7 @@ extern "C" int LLVMFuzzerTestOneInput(const uint8_t *data, size_t size) {
 | Do | Don't |
 |----|-------|
 | Reset global state between runs | Rely on state from previous runs |
-| Handle edge cases gracefully | Exit on invalid input |
+| Handle edge cases by returning 0 | Exit on invalid input |
 | Keep harness deterministic | Use random number generators |
 | Free allocated memory | Create memory leaks |
 | Validate input sizes | Process unbounded input |
@@ -209,7 +209,7 @@ Choose your compilation mode:
 
 ### Build Flags
 
-Note that `-g` is not necessary, it is added by default by the AFL++ compilers.
+`-g` is not necessary — AFL++ compilers add it by default.
 
 | Flag | Purpose |
 |------|---------|
@@ -489,7 +489,7 @@ Sanitizers are essential for finding memory corruption bugs that don't cause imm
 
 | Tip | Why It Helps |
 |-----|--------------|
-| Use LLVMFuzzerTestOneInput harnesses where possible | If a fuzzing campaign has at least 85% stability then this is the most efficient fuzzing style. If not then try standard input or file input fuzzing |
+| Use LLVMFuzzerTestOneInput harnesses when stability is at least 85% | This is the most efficient fuzzing style. If stability is below 85%, use standard input or file input fuzzing instead |
 | Use dictionaries | Helps fuzzer discover format-specific keywords and magic bytes |
 | Set realistic timeouts | Prevents false positives from system load |
 | Limit input size | Larger inputs don't necessarily explore more space |

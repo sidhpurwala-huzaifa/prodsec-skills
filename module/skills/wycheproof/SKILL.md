@@ -36,7 +36,7 @@ Wycheproof has found vulnerabilities in major libraries including OpenJDK's SHA1
 
 **Apply Wycheproof when:**
 - Testing cryptographic implementations (AES-GCM, ECDSA, ECDH, RSA, etc.)
-- Validating that crypto code handles edge cases correctly
+- Validating that crypto code rejects invalid inputs and produces expected outputs for edge cases
 - Verifying implementations against known attack vectors
 - Setting up CI/CD for cryptographic libraries
 - Auditing third-party crypto code for correctness

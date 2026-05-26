@@ -17,13 +17,13 @@ This skill combines two complementary design principles: **economy of mechanism*
 
 **Principle:** Designs should be simple, comprehensive, and should implement protection mechanisms so that unintended access paths do not exist.
 
-The more complex something is, the harder it is to understand. If you cannot understand a system, you cannot properly secure it.
+The more complex something is, the harder it is to understand. If you cannot understand a system, you cannot identify and mitigate all its risks.
 
 ### Key Aspects
 
 - **Simplicity:** A simpler design is easier to understand, analyze, audit, and maintain. Complexity introduces opportunities for vulnerabilities.
 - **Minimize moving parts:** Fewer components mean a reduced attack surface and fewer unexpected interactions
-- **Ease of understanding:** Security mechanisms must be understandable to be properly implemented and configured
+- **Ease of understanding:** Security mechanisms must be understandable to be implemented without introducing gaps and configured without misuse
 - **Avoid unnecessary features:** Every feature increases the potential for exploitation. Include only what is essential.
 - **Maintainability:** A clean, simple design allows seamless security updates without introducing regressions
 

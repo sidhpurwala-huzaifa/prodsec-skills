@@ -1,6 +1,6 @@
 ---
 name: oauth-scopes-handling
-description: Handle OAuth scopes correctly in MCP clients. Use when building or reviewing MCP client authorization flows, scope negotiation, or permission handling.
+description: Handle OAuth scopes in MCP clients according to the WWW-Authenticate header and Protected Resource Metadata discovery flow. Use when building or reviewing MCP client authorization flows, scope negotiation, or permission handling.
 category: "secure_development"
 subcategory: "mcp-client"
 ---
@@ -9,7 +9,7 @@ subcategory: "mcp-client"
 
 ## Security Requirement
 
-MCP clients MUST correctly discover and use OAuth scopes when authenticating to MCP servers. Scopes define the permissions the client is requesting and MUST be handled as follows:
+MCP clients MUST discover and use OAuth scopes from the WWW-Authenticate header or Protected Resource Metadata when authenticating to MCP servers. Scopes define the permissions the client is requesting and MUST be handled as follows:
 
 ## Scope Discovery Priority
 
@@ -43,5 +43,5 @@ The client should request exactly these scopes (or a subset) from the authorizat
 - [ ] Parse `scope` parameter from `WWW-Authenticate` header on 401 responses
 - [ ] Fall back to `scopes_supported` from Protected Resource Metadata if no scope in 401
 - [ ] Request only the scopes needed for the intended operation (principle of least privilege)
-- [ ] Handle scope downgrading gracefully (authorization server may grant fewer scopes)
+- [ ] Handle scope downgrading by checking granted scopes against requested scopes and disabling features that lack authorization (authorization server may grant fewer scopes)
 - [ ] Re-request scopes if the server indicates insufficient permissions on subsequent requests

@@ -58,7 +58,7 @@ subcategory: "cloud-infrastructure"
 
 - Isolate database servers from other systems and limit host connections
 - Disable network (TCP) access when possible; use local socket files or named pipes
-- Configure database to bind only on localhost when appropriate
+- Configure database to bind only on localhost when remote access is not required
 - Restrict network port access to specific hosts with firewall rules
 - Place database server in separate DMZ isolated from application server
 - Never allow direct connections from thick clients to backend database

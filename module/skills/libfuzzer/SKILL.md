@@ -88,7 +88,7 @@ nix-env -i clang
 
 Install Clang through Visual Studio. Refer to [Microsoft's documentation](https://learn.microsoft.com/en-us/cpp/build/clang-support-msbuild?view=msvc-170) for setup instructions.
 
-**Recommendation:** If possible, fuzz on a local x86_64 VM or rent one on DigitalOcean, AWS, or Hetzner. Linux provides the best support for libFuzzer.
+**Recommendation:** When you have access to an x86_64 Linux environment, fuzz there. Otherwise, rent one on DigitalOcean, AWS, or Hetzner. Linux provides the best support for libFuzzer.
 
 ### Verification
 
@@ -393,7 +393,7 @@ Abort test cases that run longer than 2 seconds.
 ./fuzz -fork=4 -ignore_crashes=1 corpus/
 ```
 
-**Note:** For serious multi-core fuzzing, consider switching to AFL++, Honggfuzz, or LibAFL.
+**Note:** For serious multi-core fuzzing, switch to AFL++, Honggfuzz, or LibAFL.
 
 ### Re-executing Test Cases
 
@@ -529,7 +529,7 @@ llvm-cov show ./fuzz -instr-profile=coverage.profdata -format=html > coverage.ht
 **Tips:**
 - Provide better seed inputs in corpus
 - Use dictionaries for format-aware fuzzing
-- Check if harness properly exercises target
+- Check if harness reaches all target entry points
 - Consider structure-aware fuzzing for complex formats
 - Run longer campaigns (days/weeks)
 

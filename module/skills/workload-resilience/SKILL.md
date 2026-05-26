@@ -48,7 +48,7 @@ Deployments, StatefulSets, and CRDs must support scale in/out operations. The pl
 
 > **Required for:** Telco (mandatory), Extended (mandatory), Non-Telco (mandatory), Far-Edge (optional)
 
-For workloads managed by a Horizontal Pod Autoscaler (HPA), ensure that scaling works correctly when the HPA's `minReplicas` and `maxReplicas` are adjusted.
+For workloads managed by a Horizontal Pod Autoscaler (HPA), ensure that the replica count adjusts to match when the HPA's `minReplicas` and `maxReplicas` are changed.
 
 ```yaml
 apiVersion: apps/v1
