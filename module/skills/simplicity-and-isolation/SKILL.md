@@ -11,7 +11,7 @@ subcategory: "security-principles"
 
 # Simplicity and Isolation
 
-This skill combines two complementary design principles: **economy of mechanism** (keep it simple) and **least common mechanism** (minimize sharing between components).
+This skill combines two complementary design principles: **economy of mechanism** (minimize the number of components and code paths that enforce security) and **least common mechanism** (minimize sharing between components).
 
 ## Economy of Mechanism
 
