@@ -45,8 +45,8 @@ from typical human mistakes. Review for these specifically:
 
 LLMs confidently generate calls to functions, methods, flags,
 configuration keys, or library features that do not exist. These
-compile or parse correctly but fail at runtime, or worse, silently
-do nothing.
+compile or parse without errors but fail at runtime, or worse,
+silently do nothing.
 
 **Detection:**
 - Verify every imported module, function call, and configuration
@@ -106,7 +106,7 @@ or additional validation that the project relies on.
 
 ### 4. Incomplete error handling
 
-AI often generates the happy path correctly but handles errors
+AI often generates a working happy path but handles errors
 with generic catch-all blocks, swallowed exceptions, or missing
 cleanup. Error paths are where security vulnerabilities hide.
 
@@ -143,12 +143,13 @@ to secure (or vice versa) between versions.
 
 ### 6. Abandoned scaffolding
 
-AI generates TODO comments, placeholder implementations,
+AI generates unfinished-work comments, placeholder implementations,
 commented-out code blocks, or "temporary" workarounds that are
 intended to be replaced but get committed as-is.
 
 **Detection:**
-- Search for `TODO`, `FIXME`, `HACK`, `TEMPORARY`, `XXX`
+- Search (case-insensitively) for `todo`, `fixme`, `hack`,
+  `temporary`, `xxx` markers
 - Look for commented-out code blocks
 - Check for placeholder values (e.g., a password assigned `changeme`,
   a secret key assigned `development`)
@@ -193,7 +194,7 @@ For each AI-generated or AI-assisted change:
 
 ### Completeness
 
-- [ ] No TODO/FIXME/HACK markers left in security-critical code
+- [ ] No to-do/fix-me/hack markers left in security-critical code
 - [ ] No placeholder secrets or credentials
 - [ ] No commented-out code that should be either deleted or
   uncommented
