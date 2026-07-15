@@ -150,8 +150,8 @@ intended to be replaced but get committed as-is.
 **Detection:**
 - Search for `TODO`, `FIXME`, `HACK`, `TEMPORARY`, `XXX`
 - Look for commented-out code blocks
-- Check for placeholder values (e.g., `password = "changeme"`,
-  `secret_key = "development"`)
+- Check for placeholder values (e.g., a password assigned `changeme`,
+  a secret key assigned `development`)
 - Verify that all functions have real implementations, not
   `pass` or `return None` stubs
 

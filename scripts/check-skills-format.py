@@ -146,7 +146,7 @@ def collect_paths(root: Path, layout: str) -> list[tuple[Path, str, bool, str]]:
 
     out: list[tuple[Path, str, bool, str]] = []
     for skill_dir in sorted(root.iterdir()):
-        if not skill_dir.is_dir():
+        if not skill_dir.is_dir() or skill_dir.name.startswith("."):
             continue
         skill_id = skill_dir.name
         primary = skill_dir / "SKILL.md"
